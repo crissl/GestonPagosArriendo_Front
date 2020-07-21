@@ -201,6 +201,7 @@ export class SolicitudAcompanamientosComponent implements OnInit {
     )
   }
 
+  public envios: Envio;
   public correo: any[]=[];
 
   enviarEmail() {
@@ -236,6 +237,7 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
     // }
     
+    console.log(this.envios);
 
 
     //   this.restService.UpData().subscribe(

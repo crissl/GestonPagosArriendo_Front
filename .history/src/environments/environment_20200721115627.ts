@@ -2,6 +2,7 @@
 
 export const environment = {
   production: false,
+  // url:"https://servicios.espe.edu.ec:8443/Tutorias-0.0.1-SNAPSHOT/tutoring/",
   url:"http://localhost:8083/tutoring/",
 
   URL_SERVICE: 'https://servicios.espe.edu.ec:8443/reportesWs-0.0.2-SNAPSHOT/reporteWs',

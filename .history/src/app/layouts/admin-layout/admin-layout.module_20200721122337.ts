@@ -14,6 +14,7 @@ import { ConfirmacionAsistenciaComponent } from '../../pages/estudiantes/confirm
 // tslint:disable-next-line:max-line-length
 // tslint:disable-next-line:max-line-length
 import { DatosEstudianteComponent } from '../../pages/secciones/datos-estudiante/datos-estudiante.component';
+import { DatosDocenteComponent } from '../../pages/secciones/datos-docente/datos-docente.component';
 import { DatosRegistroComponent } from '../../pages/secciones/datos-registro/datos-registro.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
@@ -60,7 +61,8 @@ import {
   MatSnackBarModule,
   MatSidenavModule,
 } from '@angular/material';
-
+import { DatosPersonalesComponent } from 'app/pages/secciones/datos-personales/datos-personales.component';
+import { DatosAcademicosComponent } from 'app/pages/secciones/datos-academicos/datos-academicos.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -134,7 +136,8 @@ import { ProfilesComponent } from '../../profiles/profiles.component';
     InicioComponent,
     DashboardComponent,
     UserProfileComponent,
-
+    DatosPersonalesComponent,
+    DatosAcademicosComponent,
 
     TypographyComponent,
     IconsComponent,
@@ -144,6 +147,8 @@ import { ProfilesComponent } from '../../profiles/profiles.component';
     ConfirmacionAsistenciaComponent,
     DatosEstudianteComponent,
     DatosRegistroComponent,
+   
+    DatosDocenteComponent,
     ConfirmarComponent,
     ErrorComponent,
     ProfilesComponent

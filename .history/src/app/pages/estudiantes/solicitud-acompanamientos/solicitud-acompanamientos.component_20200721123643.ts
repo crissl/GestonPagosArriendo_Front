@@ -12,6 +12,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'environments/environment';
+import { Envio } from 'app/models/Envio';
 import { DatePipe } from '@angular/common';
 
 
@@ -201,6 +202,7 @@ export class SolicitudAcompanamientosComponent implements OnInit {
     )
   }
 
+  public envios: Envio;
   public correo: any[]=[];
 
   enviarEmail() {
@@ -236,6 +238,17 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
     // }
     
+    
+    this.envios = {
+      asunto: "Tiene una Solicitud de Tutoria Pendiente ",
+      mensaje: "<b> La solicitud fue procesada y llenada exitosamente el <b> <br>  "
+        + this.fechaActual + ", por  el estudiante: " + this.estudiante + " con el tema " + this.datosGuardar.tema + " y la observación " + this.datosGuardar.observacion + ". Gracias por la atención.",
+      sistema: "TUTORIAS",
+      email: this.correo
+
+    }
+   
+    console.log(this.envios);
 
 
     //   this.restService.UpData().subscribe(

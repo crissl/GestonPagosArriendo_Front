@@ -134,7 +134,8 @@ import { ProfilesComponent } from '../../profiles/profiles.component';
     InicioComponent,
     DashboardComponent,
     UserProfileComponent,
-
+    DatosPersonalesComponent,
+    DatosAcademicosComponent,
 
     TypographyComponent,
     IconsComponent,
@@ -144,6 +145,7 @@ import { ProfilesComponent } from '../../profiles/profiles.component';
     ConfirmacionAsistenciaComponent,
     DatosEstudianteComponent,
     DatosRegistroComponent,
+    DatosDocenteComponent,
     ConfirmarComponent,
     ErrorComponent,
     ProfilesComponent

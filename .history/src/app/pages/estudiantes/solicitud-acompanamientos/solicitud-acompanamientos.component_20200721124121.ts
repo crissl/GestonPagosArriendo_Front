@@ -236,6 +236,7 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
     // }
     
+    console.log(this.envios);
 
 
     //   this.restService.UpData().subscribe(

@@ -12,6 +12,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'environments/environment';
+import { Envio } from 'app/models/Envio';
 import { DatePipe } from '@angular/common';
 
 
@@ -201,6 +202,7 @@ export class SolicitudAcompanamientosComponent implements OnInit {
     )
   }
 
+  public envios: Envio;
   public correo: any[]=[];
 
   enviarEmail() {
@@ -236,6 +238,7 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
     // }
     
+    console.log(this.envios);
 
 
     //   this.restService.UpData().subscribe(

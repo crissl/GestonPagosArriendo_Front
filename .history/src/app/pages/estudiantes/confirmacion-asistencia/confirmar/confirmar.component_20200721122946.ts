@@ -170,7 +170,16 @@ export class ConfirmarComponent implements OnInit {
     // }
     
     
-  
+    this.envios = {
+      asunto: "Confirmación de tutoria ",
+      mensaje: "<b>Se ha confirmado  exitosamente  <b> <br> "
+     + "que  el estudiante:" + this.estudiante + " "+this.data.asistencia.confirmacion+ "asistio, el dia "+ Date.now + ". Gracias por su atención.",
+      sistema: "TUTORIAS",
+      email: this.correo
+
+    }
+   
+    console.log(this.envios);
 
     //   this.restService.UpData().subscribe(
     //     data => {

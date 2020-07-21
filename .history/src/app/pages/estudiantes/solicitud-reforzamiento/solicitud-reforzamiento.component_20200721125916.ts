@@ -1,69 +1,78 @@
 import { Component, OnInit } from '@angular/core';
-import { PersonalDataService } from 'app/services/personal-data.service';
-import { RestService } from 'app/services/rest.service'
 import { formatDate } from "@angular/common";
-import { TutoriaConstants } from 'app/constants/constants'
-const format = 'dd/MM/yyyy';
-const myDate = Date.now();
-const locale = 'en-US';
-const formattedDate = formatDate(myDate, format, locale);
+import { RestService } from 'app/services/rest.service';
 import { ToastrService } from 'ngx-toastr';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { TutoriaConstants } from 'app/constants/constants';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { DatePipe } from '@angular/common';
 
+const format = 'dd/MM/yyyy';
+const myDate = Date.now();
+const locale = 'en-US';
+const formattedDate = formatDate(myDate, format, locale);
 
 @Component({
-  selector: 'app-solicitud-acompanamientos',
-  templateUrl: './solicitud-acompanamientos.component.html',
-  styleUrls: ['./solicitud-acompanamientos.component.scss', './solicitud-acompanamientos.component.css']
+  selector: 'app-solicitud-reforzamiento',
+  templateUrl: './solicitud-reforzamiento.component.html',
+  styleUrls: ['./solicitud-reforzamiento.component.scss', './solicitud-reforzamiento.component.css']
 })
-
-export class SolicitudAcompanamientosComponent implements OnInit {
+export class SolicitudReforzamientoComponent implements OnInit {
   pipe = new DatePipe('en-US');
   now = Date.now();
   fechaActual = this.pipe.transform(this.now, 'yyyy-MM-dd');
 
-  estudiante: any;
-  form: FormGroup;
-
-
 
   titleTutoria = TutoriaConstants.DATOSTUTORIA;
   titleEstudiante = TutoriaConstants.DATOSESTUDIANTE;
+  estudiante:any;
+  form: FormGroup;
   submitted = false;
-  spidem;
   datosDocente: any;
   datosEstudiante: any;
-
-  constructor(private router: Router, private fb: FormBuilder, private service: PersonalDataService, private restService: RestService, public toast: ToastrService, public route: Router) {
-    this.cedula = localStorage.getItem('cedula');
+  constructor(private fb: FormBuilder, private restService: RestService, public toast: ToastrService, private router: Router, public route: Router) { 
+    this.cedula= localStorage.getItem('cedula');
     this.estudiante = localStorage.getItem('nombreCompleto');
-
   }
-
+ 
   options: any = {
     toastLife: 3000,
     dismiss: "auto",
     showCloseButton: true
   };
-  datosGuardar: any;
-  ncr: any;
+  nrc1: any;
+   
+  nrc: any;
+  codigo: any;
+  asignatura: any;
+  campus: any;
+  periodo: any;
+  nivel: any;
 
+  nrcs: any
+  datosGuardar: any;
+  // spidem = 334571;
+  spidem;
   // cedula = "1725412306";
   cedula;
-
   ngOnInit() {
     this.access();
-    this.initForm();
+
     this.spidem = localStorage.getItem('pidm');
+    this.cedula = localStorage.getItem('cedula');
+    console.log('pidem',this.spidem);
+    this.listarNrc();
+    this.initForm();
     this.listarDatosDocente();
 
   }
-  id: any
-
+  id;
+  procesaPropagar(data) {
+    this.id = data[0].spidem
+    //console.log(data[0].pidm)
+  }
   tema: any = {
     tema: ""
   }
@@ -72,15 +81,16 @@ export class SolicitudAcompanamientosComponent implements OnInit {
     observacion: "",
     fecha: Date.now(),
   }
-
-
   initForm() {
-    this.form = this.fb.group({
-      'tema': ['', Validators.required]
-      // 'observacionV':  ['',  Validators.required]
+  this.form = this.fb.group({
+    'tema': ['', Validators.required]
+    // 'selectNrc':  ['',  Validators.required]
+    // 'observacion':  ['',  Validators.required]
 
-    });
+
+  });
   }
+
   getEmailEstudiante() {
     this.restService.findDataById("datosEstudiante/", this.spidem).subscribe(
       data => {
@@ -89,65 +99,25 @@ export class SolicitudAcompanamientosComponent implements OnInit {
       }
     )
   }
-  mayus() {
-    this.tema.tema.toUpperCase();
-    this.observaciones.observacion.toUpperCase();
-  }
-  guardar() {
 
-    this.datosGuardar = {
-      codigoFormularios: environment.codigoFormulariosSA,
-      interacion: environment.interacion,
-      fechaFormulario: formattedDate,
-      tipoPersona: environment.tipoPersonaE,
-      tipoTutoria: environment.tipoTutoriaA,
-      spridenPidm: this.spidem,
-      tema: this.tema.tema.toUpperCase(),
-      observacion: this.observaciones.observacion.toUpperCase(),
-      estado: environment.estado,
-      usuaCrea: this.spidem,
-      fechaCrea: Date.now()
+  
+  guardar(nrc: number, codigo, asignatura, campus, periodo, nivel) {
+    this.nrc = nrc;
+    this.codigo = codigo;
+    this.asignatura = asignatura;
+    this.campus = campus;
+    this.periodo = periodo;
+    this.nivel = nivel;
 
-
-    }
-
-    //this.guardarTutorias();
-    this.enviarEmail();
   }
 
-  guardarTutorias() {
 
-    this.restService.addData(this.datosGuardar, "crearPlanificacion").subscribe(
-      data => {
-        if (data) {
-          this.toast.success(data.mensaje, "El Formulario", this.options);
-          this.tema = [];
-          this.observaciones.observacion = "";
-          this.router.navigate(['/']);
-        } else {
-          this.toast.error("No se creo");
-        }
-      }
-    )
-  }
-
-  onSubmit() {
-    this.submitted = true;
-
-    // stop here if form is invalid
-    if (this.form.invalid) {
-      return;
-    }
-
-    // display form values on success
-    this.guardar();
-  }
-  get f() { return this.form.controls; }
 
   listarNrc() {
-    this.restService.findData(this.id).subscribe(
-      () => {
-
+    this.restService.findDataById("nrcSolicitud/", this.spidem).subscribe(
+      data => {
+        this.nrcs = data
+        // console.log(this.nrcs)
       }
     )
   }
@@ -159,13 +129,73 @@ export class SolicitudAcompanamientosComponent implements OnInit {
       }
     )
   }
+  onSubmit() {
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (this.form.invalid) {
+      return;
+    }
+
+    // display form values on success
+    // this.guardarTutoria();
+    this.enviarEmail();
+  }
+
+  mayus(){
+    this.tema.tema.toUpperCase();
+    this.observaciones.observacion.toUpperCase();
+    // console.log(this.tema.tema.toUpperCase());
+    
+  }
+  get f() { return this.form.controls; }
+  guardarTutoria() {
+
+    this.datosGuardar = {
+      codigoFormularios: environment.codigoFormulariosSR,
+      interacion: environment.interacion,
+      fechaFormulario: formattedDate,
+      tipoPersona: environment.tipoPersonaE,
+      tipoTutoria: environment.tipoTutoriaR,
+      spridenPidm: this.spidem,
+      tema: this.tema.tema.toUpperCase(),
+      observacion: this.observaciones.observacion.toUpperCase(),
+      estado: environment.estado,
+      nrc: this.nrc,
+      periodo: this.periodo,
+      nivel: this.nivel,
+      campCode: this.campus,
+      asignatura: this.asignatura,
+      codAsignatura: this.codigo,
+      usuaCrea: this.spidem,
+      fechaCrea: Date.now()
+
+
+    }
+    this.restService.addData(this.datosGuardar, "crearPlanificacion").subscribe(
+      data => {
+
+        if (data) {
+          this.toast.success(data.mensaje, "El Formulario", this.options);
+          this.tema = [];
+          this.observaciones.observacion = "";
+          this.nrcs = []
+          this.router.navigate(['/']);
+        } else {
+          this.toast.error("No se creo");
+        }
+
+      }
+    )
+  }
   persona: any = [];
   access() {
     this.restService.get('tipoPersona/' + localStorage.getItem('pidm')).subscribe((data: {}) => {
       this.persona = data[0];
+      // console.log('PER', this.persona);
       // this.router.navigate(['personal']);
       if (this.persona === undefined) {
-        // console.log('tiene acceso')
+        console.log('tiene acceso')
       } else {
         // //console.log('JSON', JSON.stringify(this.aux));
         if (data[0] == undefined) {
@@ -174,6 +204,8 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
         }
         if (this.persona.tipo_EMPLEADO == ('DO')) {
+          // this.router.navigate(['/error']);
+
           this.route.navigateByUrl('/error');
 
         }
@@ -189,16 +221,6 @@ export class SolicitudAcompanamientosComponent implements OnInit {
     }
     )
 
-  }
-
-
-  getdatosPer() {
-    this.service.getUsuarioCompleto(this.cedula).subscribe(
-      data => {
-        if (data)
-          this.estudiante = data;
-      }
-    )
   }
 
   public correo: any[]=[];
@@ -236,6 +258,17 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
     // }
     
+    
+    this.envios = {
+      asunto: "Tiene una Solicitud de Tutoria Pendiente ",
+      mensaje: "<b> La solicitud fue procesada y llenada exitosamente el <b> <br>  "
+        + this.fechaActual + ", por  el estudiante: " + this.estudiante + " con el tema " + this.datosGuardar.tema + " y la observación " + this.datosGuardar.observacion + ". Gracias por su atención.",
+      sistema: "TUTORIAS",
+      email: this.correo
+
+    }
+   
+    console.log(this.envios);
 
 
     //   this.restService.UpData().subscribe(
@@ -247,4 +280,8 @@ export class SolicitudAcompanamientosComponent implements OnInit {
 
 
   }
+
+
+
+
 }
